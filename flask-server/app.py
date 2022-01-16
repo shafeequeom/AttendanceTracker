@@ -1,6 +1,8 @@
+from sqlite3 import Timestamp
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from sqlalchemy.sql import func
 import os
 
 # Init app
@@ -15,103 +17,71 @@ db = SQLAlchemy(app)
 # Init ma
 ma = Marshmallow(app)
 
-# User Class/Model
+# Attendance Class/Model
 
 
-class User(db.Model):
+class Attendance(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    email = db.Column(db.String(200), unique=True)
+    email = db.Column(db.String(200))
     picture = db.Column(db.String(255))
+    type = db.Column(
+        db.Enum('ENTRY', 'EXIT'), nullable=False, server_default="ENTRY")
+    timestamp = db.Column(db.DateTime(timezone=False),
+                          server_default=func.now())
 
-    def __init__(self, name, email, picture):
+    def __init__(self, name, email, picture, type):
         self.name = name
         self.email = email
         self.picture = picture
+        self.type = type
 
-# User Schema
+# Attendance Schema
 
 
-class UserSchema(ma.Schema):
+class AttendanceSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'email', 'picture')
+        fields = ('id', 'name', 'email', 'picture', 'type', 'timestamp')
 
 
 # Init schema
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
+attendance_schema = AttendanceSchema()
+attendances_schema = AttendanceSchema(many=True)
 
-# Create a User
+# Create a Attendance
 
 
-@app.route('/users', methods=['POST'])
-def add_user():
+@ app.route('/attendances', methods=['POST'])
+def add_attendance():
     print(request.form)
     name = request.form['name']
     email = request.form['email']
+    type = request.form['type']
     picture = request.files['picture']
     extensionLength = len(picture.filename.split('.')) - 1
     fileExtension = picture.filename.split(".")[extensionLength]
     filename = name + '.' + fileExtension
     picture.save(os.path.join(basedir, 'static/'+filename))
 
-    userPitcure = 'images/'+filename
-    new_user = User(name, email, userPitcure)
+    attendancePitcure = 'images/'+filename
+    new_attendance = Attendance(name, email, attendancePitcure, type)
 
-    db.session.add(new_user)
+    db.session.add(new_attendance)
     db.session.commit()
 
-    return user_schema.jsonify(new_user)
+    return attendance_schema.jsonify(new_attendance)
 
-# Get All Users
-
-
-@app.route('/users', methods=['GET'])
-def get_users():
-    all_users = User.query.all()
-    result = users_schema.dump(all_users)
-    return jsonify(result)
-
-# Get Single Users
+# Get All Attendances
 
 
-@app.route('/users/<id>', methods=['GET'])
-def get_user(id):
-    user = User.query.get(id)
-    return user_schema.jsonify(user)
-
-# Update a User
-
-
-@app.route('/users/<id>', methods=['PUT'])
-def update_user(id):
-    user = User.query.get(id)
-
-    name = request.json['name']
-    email = request.json['email']
-    picture = request.json['picture']
-
-    user.name = name
-    user.email = email
-    user.picture = picture
-
-    db.session.commit()
-
-    return user_schema.jsonify(user)
-
-# Delete User
+@ app.route('/attendances/current', methods=['GET'])
+def get_attendances():
+    currentAttendanceSQL = "select * from attendance where email not in (select email from attendance where date(timestamp) = date() and type = 'EXIT') and date(timestamp) = date()"
+    result = db.engine.execute(currentAttendanceSQL)
+    return jsonify({'data': [dict(row) for row in result]})
 
 
-@app.route('/users/<id>', methods=['DELETE'])
-def delete_user(id):
-    user = User.query.get(id)
-    db.session.delete(user)
-    db.session.commit()
-
-    return user_schema.jsonify(user)
-
-
-@app.route('/images/<path:filename>')
+@ app.route('/images/<path:filename>')
 def download_file(filename):
     return send_from_directory('static', filename, as_attachment=True)
 
