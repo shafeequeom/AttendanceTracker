@@ -5,9 +5,11 @@ import router from "./router";
 import VueParticles from "vue-particles";
 import axios from "axios";
 import { VueSpinners } from "@saeris/vue-spinners";
+import Toast from "vue-toastification";
 
 Vue.use(VueSpinners);
 Vue.use(VueParticles);
+Vue.use(Toast);
 
 const api = axios.create({
   baseURL:

@@ -15,6 +15,7 @@
                   form.image = img;
                 }
               "
+              ref="camera"
             />
           </v-col>
           <v-col md="6">
@@ -68,7 +69,11 @@ import ImageCapture from "@/components/ImageCapture";
 export default {
   data: () => {
     return {
-      form: { name: null, email: null, picture: null },
+      form: {
+        name: "Shafeeque OM",
+        email: "shafeequeom7@gmail.com",
+        picture: null,
+      },
     };
   },
   components: {
@@ -83,14 +88,21 @@ export default {
       formData.append("picture", this.form.image);
       formData.append("name", this.form.name);
       formData.append("email", this.form.email);
+      formData.append("type", "ENTRY");
       console.log(formData);
       this.$http
-        .post(`users`, formData, {
+        .post(`attendances`, formData, {
           headers: {
             "Content-Type": "multipart/form-data; boundary=${form._boundary}",
           },
         })
-        .then((res) => console.log(res));
+        .then((res) => {
+          if (res.status == 200) {
+            this.form = { name: null, email: null, picture: null };
+            this.$refs.camera.reCapture();
+            this.$toast.success("Welcome! Please scan your face for exit");
+          }
+        });
     },
   },
 };

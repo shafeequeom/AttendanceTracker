@@ -35,7 +35,7 @@
 
 <script>
 import * as faceapi from "face-api.js";
-
+import "vue-toastification/dist/index.css";
 export default {
   name: "App",
   data: () => {
@@ -52,7 +52,7 @@ export default {
         faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
         faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
         faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-      ]);
+      ]).then(this.open());
     },
     async detectFaces() {
       // let container = this.$refs.main;
