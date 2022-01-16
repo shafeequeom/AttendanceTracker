@@ -1,10 +1,10 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 import os
 
 # Init app
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 basedir = os.path.abspath(os.path.dirname(__file__))
 # Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
@@ -46,11 +46,17 @@ users_schema = UserSchema(many=True)
 
 @app.route('/users', methods=['POST'])
 def add_user():
-    name = request.json['name']
-    email = request.json['email']
-    picture = request.json['picture']
+    print(request.form)
+    name = request.form['name']
+    email = request.form['email']
+    picture = request.files['picture']
+    extensionLength = len(picture.filename.split('.')) - 1
+    fileExtension = picture.filename.split(".")[extensionLength]
+    filename = name + '.' + fileExtension
+    picture.save(os.path.join(basedir, 'static/'+filename))
 
-    new_user = User(name, email, picture)
+    userPitcure = 'images/'+filename
+    new_user = User(name, email, userPitcure)
 
     db.session.add(new_user)
     db.session.commit()
@@ -103,6 +109,11 @@ def delete_user(id):
     db.session.commit()
 
     return user_schema.jsonify(user)
+
+
+@app.route('/images/<path:filename>')
+def download_file(filename):
+    return send_from_directory('static', filename, as_attachment=True)
 
 
 # Run Server
