@@ -1,6 +1,12 @@
 <template>
   <div :style="`height:${height}px`">
-    <v-img v-show="image" width="100%" :height="height" :src="image" />
+    <v-img
+      style="border-radius: 10px"
+      v-show="image"
+      width="100%"
+      :height="height"
+      :src="image"
+    />
     <div
       class="d-flex align-center justify-center flex-column"
       :style="`height:${height}px`"
@@ -33,15 +39,16 @@
           v-if="image == null"
           :width="canvas.width"
           :height="canvas.height"
-          :style="`z-index: 100;transform: translateY(-101%);`"
+          :style="`z-index: 10;transform: translateY(-101%);position:fixed`"
           ref="canvas"
         ></canvas>
       </div>
 
       <div
         class="d-flex justify-center"
-        style="z-index: 100; margin-top: -80px"
+        style="z-index: 1000 !important; margin-top: -80px; position: relative"
       >
+        <v-spacer></v-spacer>
         <v-btn
           v-if="image == null && started"
           fab
@@ -62,9 +69,9 @@
         >
           <v-icon>mdi-camera-retake</v-icon>
         </v-btn>
-        <v-btn v-if="started && image == null" icon dark fab @click="onStop"
+        <!-- <v-btn v-if="started && image == null" icon dark fab @click="onStop"
           ><v-icon dark>mdi-camera-off</v-icon></v-btn
-        >
+        > -->
         <v-btn v-if="!started" fab dark icon @click="onStart"
           ><v-icon dark>mdi-camera</v-icon></v-btn
         >
@@ -174,7 +181,6 @@ export default {
         minFaceSize: 150,
       };
       let video = this.$refs.webcam ? this.$refs.webcam.$el : null;
-      console.log(video);
       if (video && video.readyState == 4) {
         const options = new faceapi.MtcnnOptions(mtcnnParams);
         let fullFaceDescriptions = await faceapi

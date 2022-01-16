@@ -85,6 +85,10 @@ export default {
     },
     submitEntryForm() {
       let formData = new FormData();
+      if (!this.form.image) {
+        this.$toast.error("Error! Please capture image");
+        return;
+      }
       formData.append("picture", this.form.image);
       formData.append("name", this.form.name);
       formData.append("email", this.form.email);
