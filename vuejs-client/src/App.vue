@@ -49,10 +49,10 @@ export default {
   methods: {
     loadModels() {
       Promise.all([
-        faceapi.loadFaceLandmarkModel("models"),
-        faceapi.loadFaceRecognitionModel("models"),
-        faceapi.loadFaceExpressionModel("models"),
-        faceapi.loadMtcnnModel("models"),
+        faceapi.loadFaceLandmarkModel("./assets/models"),
+        faceapi.loadFaceRecognitionModel("./assets/models"),
+        faceapi.loadFaceExpressionModel("./assets/models"),
+        faceapi.loadMtcnnModel("./assets/models"),
         // faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
         // faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
         // faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
