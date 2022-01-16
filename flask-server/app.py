@@ -2,11 +2,15 @@ from sqlite3 import Timestamp
 from flask import Flask, request, jsonify, send_from_directory
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from flask_cors import CORS, cross_origin
 from sqlalchemy.sql import func
 import os
 
 # Init app
 app = Flask(__name__, static_url_path='/static')
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 # Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + \
@@ -52,6 +56,7 @@ attendances_schema = AttendanceSchema(many=True)
 
 
 @ app.route('/attendances', methods=['POST'])
+@cross_origin()
 def add_attendance():
     print(request.form)
     name = request.form['name']
