@@ -34,31 +34,9 @@
 </template>
 
 <script>
-import * as faceapi from "face-api.js";
 import "vue-toastification/dist/index.css";
 export default {
   name: "App",
-  data: () => {
-    return {
-      image: null,
-    };
-  },
-  mounted() {
-    this.loadModels();
-  },
-  methods: {
-    loadModels() {
-      Promise.all([
-        faceapi.loadFaceLandmarkModel(this.$baseUrl + "models"),
-        faceapi.loadFaceRecognitionModel(this.$baseUrl + "models"),
-        faceapi.loadFaceExpressionModel(this.$baseUrl + "models"),
-        faceapi.loadMtcnnModel(this.$baseUrl + "models"),
-        // faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-        // faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-        // faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
-      ]);
-    },
-  },
 };
 </script>
 <style>

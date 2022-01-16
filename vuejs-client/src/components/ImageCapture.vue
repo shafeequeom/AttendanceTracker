@@ -39,14 +39,14 @@
           v-if="image == null"
           :width="canvas.width"
           :height="canvas.height"
-          :style="`z-index: 10;transform: translateY(-101%);position:fixed`"
+          :style="`z-index: 10;transform: translateY(-101%);`"
           ref="canvas"
         ></canvas>
       </div>
 
       <div
         class="d-flex justify-center"
-        style="z-index: 1000 !important; margin-top: -80px; position: relative"
+        style="z-index: 1000 !important; margin-top: -80px"
       >
         <v-spacer></v-spacer>
         <v-btn
@@ -136,9 +136,22 @@ export default {
     },
     onStarted(stream) {
       this.started = stream.active;
-      setInterval(() => {
-        this.detectFaces();
-      }, 1000);
+      this.loadModels();
+    },
+    loadModels() {
+      Promise.all([
+        faceapi.loadFaceLandmarkModel(this.$baseUrl + "models"),
+        faceapi.loadFaceRecognitionModel(this.$baseUrl + "models"),
+        faceapi.loadFaceExpressionModel(this.$baseUrl + "models"),
+        faceapi.loadMtcnnModel(this.$baseUrl + "models"),
+        // faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
+        // faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
+        // faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+      ]).then(() => {
+        setInterval(() => {
+          this.detectFaces();
+        }, 1000);
+      });
     },
     onStopped(stream) {
       this.started = stream.active;
