@@ -11,7 +11,7 @@
         color="#ccc"
         :loading="!started"
         :size="150"
-        :sizeUnit="px"
+        sizeUnit="px"
       ></circle-loader>
       <h4 class="mt-3" font>Loading Camera..</h4>
     </div>
@@ -77,7 +77,6 @@ export default {
   data() {
     return {
       image: null,
-      img: null,
       camera: null,
       deviceId: null,
       devices: [],
@@ -116,7 +115,7 @@ export default {
       this.image = this.$refs.webcam.capture();
       fetch(this.image)
         .then((res) => res.blob())
-        .then((img) => (this.img = img));
+        .then((img) => this.$emit("capture", img));
     },
     onStarted(stream) {
       this.started = stream.active;
@@ -144,19 +143,6 @@ export default {
     onCameraChange(deviceId) {
       this.deviceId = deviceId;
       this.camera = deviceId;
-    },
-    close() {
-      this.capture_image_dialoge = false;
-      this.$emit("close");
-      this.onStop();
-    },
-    confirm() {
-      if (this.img == null) {
-        this.showError("No image capture");
-        return;
-      }
-      this.$emit("confirm", this.img);
-      this.onStop();
     },
   },
 };

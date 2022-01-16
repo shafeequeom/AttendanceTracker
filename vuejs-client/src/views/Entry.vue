@@ -9,7 +9,13 @@
       <v-card-text>
         <v-row>
           <v-col md="6" sm="12">
-            <image-capture />
+            <image-capture
+              @capture="
+                (img) => {
+                  form.image = img;
+                }
+              "
+            />
           </v-col>
           <v-col md="6">
             <div style="margin: 20 auto">
@@ -25,18 +31,27 @@
                   <v-col md="12" sm="12" lg="12">
                     <v-text-field
                       outlined
+                      v-model="form.name"
                       round
                       label="Enter your name"
                     ></v-text-field>
                   </v-col>
                   <v-col md="12" sm="12" lg="12">
                     <v-text-field
+                      v-model="form.email"
                       outlined
                       label="Enter your email"
                     ></v-text-field>
                   </v-col>
                   <v-col>
-                    <v-btn height="40" dark block color="black">Enter</v-btn>
+                    <v-btn
+                      height="40"
+                      @click="submitEntryForm"
+                      dark
+                      block
+                      color="black"
+                      >Enter</v-btn
+                    >
                   </v-col>
                 </v-row>
               </v-form>
@@ -53,11 +68,30 @@ import ImageCapture from "@/components/ImageCapture";
 export default {
   data: () => {
     return {
-      image: null,
+      form: { name: null, email: null, picture: null },
     };
   },
   components: {
     "image-capture": ImageCapture,
+  },
+  methods: {
+    captureImage(img) {
+      this.form.picture = img;
+    },
+    submitEntryForm() {
+      let formData = new FormData();
+      formData.append("picture", this.form.image);
+      formData.append("name", this.form.name);
+      formData.append("email", this.form.email);
+      console.log(formData);
+      this.$http
+        .post(`users`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data; boundary=${form._boundary}",
+          },
+        })
+        .then((res) => console.log(res));
+    },
   },
 };
 </script>
