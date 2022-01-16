@@ -81,5 +81,6 @@ body {
 
 .background {
   background-color: black !important;
+  overflow-y: hidden;
 }
 </style>

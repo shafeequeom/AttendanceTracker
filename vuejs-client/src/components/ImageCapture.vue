@@ -30,7 +30,7 @@
           @camera-change="onCameraChange"
         />
         <canvas
-          v-show="image == null"
+          v-if="image == null"
           :width="canvas.width"
           :height="canvas.height"
           :style="`z-index: 100;transform: translateY(-101%);`"
