@@ -1,33 +1,34 @@
 <template>
-  <div>
-    <v-img v-show="image" :src="image" />
+  <div :style="`height:${height}px`">
+    <v-img v-show="image" width="100%" :height="height" :src="image" />
     <h3 class="text-center" v-if="!started">
       Camera Stopped. Click start to open camera again
     </h3>
 
     <div>
-      <vue-web-cam
-        v-show="image == null"
-        ref="webcam"
-        :device-id="deviceId"
-        width="100%"
-        :height="height"
-        @started="onStarted"
-        @stopped="onStopped"
-        @error="onError"
-        @cameras="onCameras"
-        @camera-change="onCameraChange"
-      />
+      <div class="videoAdd">
+        <vue-web-cam
+          v-show="image == null"
+          ref="webcam"
+          :device-id="deviceId"
+          width="100%"
+          @started="onStarted"
+          @stopped="onStopped"
+          @error="onError"
+          @cameras="onCameras"
+          @camera-change="onCameraChange"
+        />
+      </div>
 
       <div
         class="d-flex justify-center"
-        style="z-index: 100; margin-top: -130px"
+        style="z-index: 100000; margin-top: -100px"
       >
         <v-btn
           v-if="image == null && started"
           fab
           dark
-          color="teal"
+          icon
           class="mr-2"
           @click="onCapture"
         >
@@ -37,16 +38,16 @@
           v-else-if="started"
           fab
           dark
-          color="teal"
+          icon
           class="mr-2"
           @click="reCapture"
         >
           <v-icon>mdi-camera-retake</v-icon>
         </v-btn>
-        <v-btn v-if="started && image == null" color="error" fab @click="onStop"
+        <v-btn v-if="started && image == null" icon dark fab @click="onStop"
           ><v-icon dark>mdi-camera-off</v-icon></v-btn
         >
-        <v-btn v-if="!started" fab color="success" @click="onStart"
+        <v-btn v-if="!started" fab dark icon @click="onStart"
           ><v-icon dark>mdi-camera</v-icon></v-btn
         >
       </div>
@@ -69,7 +70,7 @@ export default {
       devices: [],
       capture_image_dialoge: false,
       started: false,
-      height: "400px",
+      height: 400,
     };
   },
   computed: {
@@ -81,8 +82,10 @@ export default {
     camera: {
       immediate: true,
       handler(id) {
-        this.deviceId = id;
-        this.height = `${window.innerHeight - 50}px`;
+        if (id) {
+          this.deviceId = id;
+          this.height = `${this.$refs.webcam.$el.height - 50}`;
+        }
       },
     },
     devices() {
@@ -145,3 +148,17 @@ export default {
   },
 };
 </script>
+<style>
+video {
+  height: 100%;
+  width: 100%;
+}
+
+video.object-fit-fill {
+  object-fit: fill;
+}
+
+video.object-fit-cover {
+  object-fit: cover;
+}
+</style>

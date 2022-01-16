@@ -1,30 +1,47 @@
 <template>
-  <v-app>
+  <v-app class="background">
     <v-main>
-      <v-container fluid>
-        <v-row>
-          <v-col md="6">
-            <image-capture />
-          </v-col>
-          <v-col md="6"> </v-col>
-        </v-row>
-      </v-container>
+      <div
+        style="
+          top: 0;
+          left: 0;
+          position: fixed;
+          overflow: hidden;
+          width: 100%;
+          height: 100%;
+        "
+      >
+        <vue-particles
+          color="#ccc"
+          :particleOpacity="0.7"
+          :particlesNumber="80"
+          shapeType="circle"
+          :particleSize="4"
+          linesColor="#dedede"
+          :linesWidth="1"
+          :lineLinked="true"
+          :lineOpacity="0.4"
+          :linesDistance="150"
+          :moveSpeed="3"
+        >
+        </vue-particles>
+      </div>
+      <v-fade-transition mode="out-in">
+        <router-view />
+      </v-fade-transition>
     </v-main>
   </v-app>
 </template>
 
 <script>
 import * as faceapi from "face-api.js";
-import ImageCapture from "./components/ImageCapture";
+
 export default {
   name: "App",
   data: () => {
     return {
       image: null,
     };
-  },
-  components: {
-    "image-capture": ImageCapture,
   },
   mounted() {
     this.loadModels();
@@ -53,3 +70,12 @@ export default {
   },
 };
 </script>
+<style>
+body {
+  font-family: "Roboto", sans-serif;
+}
+
+.background {
+  background-color: black !important;
+}
+</style>
