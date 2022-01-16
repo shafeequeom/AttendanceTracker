@@ -1,9 +1,20 @@
 <template>
   <div :style="`height:${height}px`">
     <v-img v-show="image" width="100%" :height="height" :src="image" />
-    <h3 class="text-center" v-if="!started">
-      Camera Stopped. Click start to open camera again
-    </h3>
+    <div
+      class="d-flex align-center justify-center flex-column"
+      :style="`height:${height}px`"
+      v-if="!started"
+    >
+      <circle-loader
+        class="custom-class"
+        color="#ccc"
+        :loading="!started"
+        :size="150"
+        :sizeUnit="px"
+      ></circle-loader>
+      <h4 class="mt-3" font>Loading Camera..</h4>
+    </div>
 
     <div>
       <div class="videoAdd">
@@ -22,7 +33,7 @@
 
       <div
         class="d-flex justify-center"
-        style="z-index: 100000; margin-top: -100px"
+        style="z-index: 100; margin-top: -80px"
       >
         <v-btn
           v-if="image == null && started"
@@ -57,9 +68,11 @@
 
 <script>
 import { WebCam } from "vue-web-cam";
+import { CircleLoader } from "@saeris/vue-spinners";
 export default {
   components: {
     "vue-web-cam": WebCam,
+    "circle-loader": CircleLoader,
   },
   data() {
     return {
@@ -152,6 +165,7 @@ export default {
 video {
   height: 100%;
   width: 100%;
+  border-radius: 10px;
 }
 
 video.object-fit-fill {
