@@ -20,6 +20,8 @@ const api = axios.create({
 
 Vue.prototype.$http = api;
 
+Vue.prototype.$baseUrl = process.env.VUE_APP_BASE_URL;
+
 Vue.config.productionTip = false;
 
 new Vue({
