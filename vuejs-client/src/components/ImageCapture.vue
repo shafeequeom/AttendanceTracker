@@ -17,7 +17,7 @@
     </div>
 
     <div>
-      <div class="videoAdd">
+      <div>
         <vue-web-cam
           v-show="image == null"
           ref="webcam"
@@ -29,6 +29,13 @@
           @cameras="onCameras"
           @camera-change="onCameraChange"
         />
+        <canvas
+          v-show="image == null"
+          :width="canvas.width"
+          :height="canvas.height"
+          :style="`z-index: 100;transform: translateY(-101%);`"
+          ref="canvas"
+        ></canvas>
       </div>
 
       <div
@@ -69,6 +76,7 @@
 <script>
 import { WebCam } from "vue-web-cam";
 import { CircleLoader } from "@saeris/vue-spinners";
+import * as faceapi from "face-api.js";
 export default {
   components: {
     "vue-web-cam": WebCam,
@@ -83,6 +91,7 @@ export default {
       capture_image_dialoge: false,
       started: false,
       height: 400,
+      canvas: { height: 400, width: 100, margin: -400 },
     };
   },
   computed: {
@@ -97,6 +106,7 @@ export default {
         if (id) {
           this.deviceId = id;
           this.height = `${this.$refs.webcam.$el.height - 50}`;
+          this.detectFaces();
         }
       },
     },
@@ -119,6 +129,9 @@ export default {
     },
     onStarted(stream) {
       this.started = stream.active;
+      setInterval(() => {
+        this.detectFaces();
+      }, 1000);
     },
     onStopped(stream) {
       this.started = stream.active;
@@ -144,6 +157,52 @@ export default {
       this.deviceId = deviceId;
       this.camera = deviceId;
     },
+    async detectFaces() {
+      const mtcnnParams = {
+        // number of scaled versions of the input image passed through the CNN
+        // of the first stage, lower numbers will result in lower inference time,
+        // but will also be less accurate
+        maxNumScales: 10,
+        // scale factor used to calculate the scale steps of the image
+        // pyramid used in stage 1
+        scaleFactor: 0.709,
+        // the score threshold values used to filter the bounding
+        // boxes of stage 1, 2 and 3
+        scoreThresholds: [0.6, 0.7, 0.7],
+        // mininum face size to expect, the higher the faster processing will be,
+        // but smaller faces won't be detected
+        minFaceSize: 150,
+      };
+      let video = this.$refs.webcam ? this.$refs.webcam.$el : null;
+      console.log(video);
+      if (video && video.readyState == 4) {
+        const options = new faceapi.MtcnnOptions(mtcnnParams);
+        let fullFaceDescriptions = await faceapi
+          .detectAllFaces(video, options)
+          .withFaceLandmarks()
+          .withFaceDescriptors()
+          .withFaceExpressions();
+        const canvas = this.$refs.canvas;
+        const dims = faceapi.matchDimensions(canvas, video, true);
+        fullFaceDescriptions = await faceapi.resizeResults(
+          fullFaceDescriptions,
+          dims
+        );
+        if (fullFaceDescriptions.length) {
+          this.canvas.width = video.width;
+          this.canvas.height = video.height;
+          this.canvas.margin = -(video.height + 50);
+
+          fullFaceDescriptions.forEach((element) => {
+            faceapi.draw.drawDetections(canvas, element);
+          });
+        }
+        if (fullFaceDescriptions.length > 1) {
+          this.$toast.clear();
+          this.$toast.error("Error! More than one face detected");
+        }
+      }
+    },
   },
 };
 </script>
@@ -151,6 +210,13 @@ export default {
 video {
   height: 100%;
   width: 100%;
+  position: relative;
+  border-radius: 10px;
+}
+canvas {
+  height: 100%;
+  width: 100%;
+  position: sticky;
   border-radius: 10px;
 }
 
@@ -160,5 +226,16 @@ video.object-fit-fill {
 
 video.object-fit-cover {
   object-fit: cover;
+}
+#navi,
+#infoi {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+#infoi {
+  z-index: 10;
 }
 </style>
