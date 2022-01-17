@@ -201,7 +201,7 @@ export default {
         minFaceSize: 150,
       };
       let video = this.$refs.webcam ? this.$refs.webcam.$el : null;
-      if (video && video.readyState == 4) {
+      if (video && video.readyState == 4 && !this.image) {
         const options = new faceapi.MtcnnOptions(mtcnnParams);
         let fullFaceDescriptions = await faceapi
           .detectAllFaces(video, options)
@@ -214,7 +214,7 @@ export default {
           fullFaceDescriptions,
           dims
         );
-        if (fullFaceDescriptions.length && !this.image) {
+        if (fullFaceDescriptions.length) {
           this.canvas.width = video.width;
           this.canvas.height = video.height;
           this.canvas.margin = -(video.height + 50);
