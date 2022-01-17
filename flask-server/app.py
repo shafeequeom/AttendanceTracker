@@ -63,6 +63,14 @@ def add_attendance():
     email = request.form['email']
     type = request.form['type']
     picture = request.files['picture']
+    if(type == 'EXIT'):
+        entry = Attendance.query.filter(
+            Attendance.name.like(name),
+            Attendance.email.like(email)).one()
+        data = attendance_schema.dump(entry)
+        if data:
+            result = {"message": 'No entry data found', "data": data}
+            return jsonify(result), 400
     extensionLength = len(picture.filename.split('.')) - 1
     fileExtension = picture.filename.split(".")[extensionLength]
     filename = name + '.' + fileExtension
@@ -74,7 +82,10 @@ def add_attendance():
     db.session.add(new_attendance)
     db.session.commit()
 
-    return attendance_schema.jsonify(new_attendance)
+    data = attendance_schema.dump(new_attendance)
+    message = 'Entry recorded successfully' if type == 'ENTRY' else 'Exit recorded successfully'
+    result = {"message": message, "data": data}
+    return jsonify(result), 400
 
 # Get All Attendances
 
@@ -83,7 +94,8 @@ def add_attendance():
 def get_attendances():
     currentAttendanceSQL = "select * from attendance where email not in (select email from attendance where date(timestamp) = date() and type = 'EXIT') and date(timestamp) = date()"
     result = db.engine.execute(currentAttendanceSQL)
-    return jsonify({'data': [dict(row) for row in result]})
+    data = [dict(row) for row in result]
+    return jsonify({'data': data, 'message': "List of currently active entries for today"})
 
 
 @ app.route('/images/<path:filename>')
