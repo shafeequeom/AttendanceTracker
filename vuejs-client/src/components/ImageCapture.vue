@@ -6,7 +6,21 @@
       width="100%"
       :height="height"
       :src="image"
-    />
+    >
+      <div class="d-flex align-end justify-center fill-height">
+        <v-btn
+          v-if="image"
+          fab
+          style="z-index: 1000 !important"
+          dark
+          small
+          class="mr-2 mb-10"
+          @click="reCapture"
+        >
+          <v-icon>mdi-camera-retake</v-icon>
+        </v-btn>
+      </div>
+    </v-img>
     <div
       class="d-flex align-center justify-center flex-column"
       :style="`height:${height}px`"
@@ -23,10 +37,11 @@
     </div>
 
     <div>
-      <div>
+      <div :style="`height:${height}px`">
         <vue-web-cam
           v-show="image == null"
           ref="webcam"
+          style="border-radius: 10px"
           :device-id="deviceId"
           width="100%"
           @started="onStarted"
@@ -41,40 +56,29 @@
           :height="canvas.height"
           :style="`z-index: 10;transform: translateY(-101%);`"
           ref="canvas"
-        ></canvas>
+        >
+        </canvas>
       </div>
 
-      <div
-        class="d-flex justify-center"
-        style="z-index: 1000 !important; margin-top: -80px"
-      >
-        <v-spacer></v-spacer>
-        <v-btn
-          v-if="image == null && started"
-          fab
-          dark
-          icon
-          class="mr-2"
-          @click="onCapture"
-        >
-          <v-icon>mdi-camera-iris</v-icon>
-        </v-btn>
-        <v-btn
-          v-else-if="started"
-          fab
-          dark
-          icon
-          class="mr-2"
-          @click="reCapture"
-        >
-          <v-icon>mdi-camera-retake</v-icon>
-        </v-btn>
-        <!-- <v-btn v-if="started && image == null" icon dark fab @click="onStop"
+      <div style="z-index: 1000 !important; margin-top: -80px">
+        <div class="d-flex justify-center">
+          <v-btn
+            v-if="image == null && started"
+            fab
+            small
+            style="z-index: 1000 !important"
+            dark
+            @click="onCapture"
+          >
+            <v-icon>mdi-camera-iris</v-icon>
+          </v-btn>
+          <!-- <v-btn v-if="started && image == null" icon dark fab @click="onStop"
           ><v-icon dark>mdi-camera-off</v-icon></v-btn
         > -->
-        <v-btn v-if="!started" fab dark icon @click="onStart"
-          ><v-icon dark>mdi-camera</v-icon></v-btn
-        >
+          <v-btn v-if="!started" fab dark icon @click="onStart"
+            ><v-icon dark>mdi-camera</v-icon></v-btn
+          >
+        </div>
       </div>
     </div>
   </div>
@@ -88,6 +92,9 @@ export default {
   components: {
     "vue-web-cam": WebCam,
     "circle-loader": CircleLoader,
+  },
+  props: {
+    auto: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -207,7 +214,7 @@ export default {
           fullFaceDescriptions,
           dims
         );
-        if (fullFaceDescriptions.length) {
+        if (fullFaceDescriptions.length && !this.image) {
           this.canvas.width = video.width;
           this.canvas.height = video.height;
           this.canvas.margin = -(video.height + 50);
@@ -215,6 +222,9 @@ export default {
           fullFaceDescriptions.forEach((element) => {
             faceapi.draw.drawDetections(canvas, element);
           });
+          if (this.auto) {
+            this.onCapture();
+          }
         }
         if (fullFaceDescriptions.length > 1) {
           this.$toast.clear();
@@ -230,7 +240,8 @@ video {
   height: 100%;
   width: 100%;
   position: relative;
-  border-radius: 10px;
+  border-radius: 10px !important;
+  object-fit: cover;
 }
 canvas {
   height: 100%;
@@ -239,13 +250,6 @@ canvas {
   border-radius: 10px;
 }
 
-video.object-fit-fill {
-  object-fit: fill;
-}
-
-video.object-fit-cover {
-  object-fit: cover;
-}
 #navi,
 #infoi {
   width: 100%;
