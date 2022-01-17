@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 
 import Home from "../views/Entry";
 import Entry from "../views/Entry";
+import Exit from "../views/Exit";
 import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter);
@@ -30,7 +31,19 @@ const routes = [
       module: {
         id: null,
       },
-      title: "Details",
+      title: "Entry",
+    },
+  },
+  {
+    name: "Exit",
+    path: "/exit",
+    component: Exit,
+    meta: {
+      item: null,
+      module: {
+        id: null,
+      },
+      title: "Exit",
     },
   },
   //404

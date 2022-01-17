@@ -9,7 +9,7 @@
       ></v-switch>
     </div>
     <div>
-      <div class="text-center welcome-text">WELCOME TO</div>
+      <div class="text-center welcome-text">THANK YOU, VISIT AGAIN</div>
       <div class="text-center museum-text">MUSEUM OF FUTURE</div>
     </div>
 
@@ -36,33 +36,25 @@
               ></v-img>
             </div>
             <div class="pa-4">
-              <v-form>
+              <v-form class="mt-6">
                 <v-row>
-                  <v-col md="12" sm="12" lg="12">
-                    <v-text-field
-                      outlined
-                      v-model="form.name"
-                      round
-                      label="Enter your name"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col md="12" sm="12" lg="12">
-                    <v-text-field
-                      v-model="form.email"
-                      outlined
-                      label="Enter your email"
-                    ></v-text-field>
-                  </v-col>
-                  <v-col>
-                    <v-btn
-                      height="40"
-                      @click="submitEntryForm"
-                      dark
-                      block
-                      color="black"
-                      >Enter</v-btn
-                    >
-                  </v-col>
+                  <v-autocomplete
+                    outlined
+                    v-model="user"
+                    :items="entries"
+                    :loading="isSearchLoading"
+                    :search-input.sync="search"
+                    item-text="name"
+                    item-value="name"
+                    label="Search your email*"
+                    placeholder="Search your email.."
+                    :rules="[(v) => !!v || 'Name is required is required']"
+                    auto-select-first
+                    return-object
+                    required
+                    ref="nameField"
+                  >
+                  </v-autocomplete>
                 </v-row>
               </v-form>
             </div>
@@ -79,11 +71,11 @@ import registerAttendance from "../functions/attendance";
 export default {
   data: () => {
     return {
-      form: {
-        name: "Shafeeque OM",
-        email: "shafeequeom7@gmail.com",
-        picture: null,
-      },
+      isSearchLoading: false,
+      entries: [],
+      user: {},
+      search: null,
+      form: {},
       autoShot: false,
     };
   },
