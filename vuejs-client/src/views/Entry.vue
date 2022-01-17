@@ -100,14 +100,19 @@ export default {
         return;
       }
       this.form.type = "ENTRY";
+      console.log(this.$toast);
       await registerAttendance(this.form)
         .then((response) => {
-          this.$toast.success(response.data.message);
-          this.form = {
-            name: null,
-            email: null,
-            picture: null,
-          };
+          console.log(this.$toast);
+          if (response.status == 200) {
+            console.log(response.data.message);
+            this.$toast.success(response.data.message);
+            this.form = {
+              name: null,
+              email: null,
+              picture: null,
+            };
+          }
         })
         .catch((error) => {
           let message = this.errorParser(error);
