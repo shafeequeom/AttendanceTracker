@@ -102,7 +102,12 @@ export default {
       this.form.type = "ENTRY";
       await registerAttendance(this.form)
         .then((response) => {
-          this.$toast.success(response.message);
+          this.$toast.success(response.data.message);
+          this.form = {
+            name: null,
+            email: null,
+            picture: null,
+          };
         })
         .catch((error) => {
           let message = this.errorParser(error);

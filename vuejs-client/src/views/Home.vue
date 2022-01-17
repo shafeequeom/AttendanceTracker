@@ -52,4 +52,9 @@ export default {
   font-size: 20vh !important;
   font-weight: 400;
 }
+@media only screen and (max-width: 600px) {
+  .museum-text {
+    font-size: 15vh !important;
+  }
+}
 </style>

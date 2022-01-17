@@ -208,13 +208,14 @@ export default {
           .withFaceLandmarks()
           .withFaceDescriptors()
           .withFaceExpressions();
-        const canvas = this.$refs.canvas;
-        const dims = faceapi.matchDimensions(canvas, video, true);
-        fullFaceDescriptions = await faceapi.resizeResults(
-          fullFaceDescriptions,
-          dims
-        );
-        if (fullFaceDescriptions.length) {
+
+        if (fullFaceDescriptions.length && video) {
+          const canvas = this.$refs.canvas;
+          const dims = faceapi.matchDimensions(canvas, video, true);
+          fullFaceDescriptions = await faceapi.resizeResults(
+            fullFaceDescriptions,
+            dims
+          );
           this.canvas.width = video.width;
           this.canvas.height = video.height;
           this.canvas.margin = -(video.height + 50);
