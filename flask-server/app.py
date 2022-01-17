@@ -85,7 +85,7 @@ def add_attendance():
     data = attendance_schema.dump(new_attendance)
     message = 'Entry recorded successfully' if type == 'ENTRY' else 'Exit recorded successfully'
     result = {"message": message, "data": data}
-    return jsonify(result), 400
+    return jsonify(result)
 
 # Get All Attendances
 
