@@ -61,7 +61,7 @@
       </div>
 
       <div style="z-index: 1000 !important; margin-top: -80px">
-        <div class="d-flex justify-center">
+        <div class="d-flex align-center justify-center">
           <v-btn
             v-if="image == null && started"
             fab
@@ -72,6 +72,17 @@
           >
             <v-icon>mdi-camera-iris</v-icon>
           </v-btn>
+          <div
+            v-if="detecting"
+            style="
+              color: red;
+              z-index: 10000 !important;
+              transform: translateY(-20%);
+            "
+            class="ml-2"
+          >
+            Detecting Face..
+          </div>
           <!-- <v-btn v-if="started && image == null" icon dark fab @click="onStop"
           ><v-icon dark>mdi-camera-off</v-icon></v-btn
         > -->
@@ -106,6 +117,7 @@ export default {
       started: false,
       height: 400,
       canvas: { height: 400, width: 100, margin: -400 },
+      detecting: true,
     };
   },
   computed: {
@@ -175,7 +187,7 @@ export default {
       setTimeout(this.onStart(), 1000);
     },
     onError(error) {
-      this.showError(error);
+      this.$toast.error(error);
     },
     onCameras(cameras) {
       this.devices = cameras;
@@ -223,9 +235,12 @@ export default {
           fullFaceDescriptions.forEach((element) => {
             faceapi.draw.drawDetections(canvas, element);
           });
+          this.detecting = false;
           if (this.auto) {
             this.onCapture();
           }
+        } else {
+          this.detecting = true;
         }
         if (fullFaceDescriptions.length > 1) {
           this.$toast.clear();
