@@ -66,9 +66,9 @@ def add_attendance():
     if(type == 'EXIT'):
         entry = Attendance.query.filter(
             Attendance.name.like(name),
-            Attendance.email.like(email)).one()
+            Attendance.email.like(email)).first()
         data = attendance_schema.dump(entry)
-        if data:
+        if not data:
             result = {"message": 'No entry data found', "data": data}
             return jsonify(result), 400
     extensionLength = len(picture.filename.split('.')) - 1
