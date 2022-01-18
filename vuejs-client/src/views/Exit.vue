@@ -82,6 +82,9 @@ export default {
   components: {
     "image-capture": ImageCapture,
   },
+  mounted() {
+    this.$store.dispatch("loadActiveEntries");
+  },
   methods: {
     captureImage(img) {
       this.form.picture = img;
