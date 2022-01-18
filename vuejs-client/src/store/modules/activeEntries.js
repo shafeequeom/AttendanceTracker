@@ -9,7 +9,7 @@ const getDefaultEntryState = () => {
 const state = getDefaultEntryState();
 
 const getters = {
-  getActiveEntries: (state) => state.paymentMethods,
+  getActiveEntries: (state) => state.activeEntries,
 };
 
 const actions = {

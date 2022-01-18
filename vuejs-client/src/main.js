@@ -15,6 +15,7 @@ Vue.use(Toast);
 Vue.mixin(common);
 
 Vue.prototype.$baseUrl = process.env.VUE_APP_BASE_URL;
+Vue.prototype.$apiUrl = process.env.VUE_APP_API_URL;
 
 Vue.config.productionTip = false;
 
