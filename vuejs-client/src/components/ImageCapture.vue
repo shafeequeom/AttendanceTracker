@@ -106,6 +106,7 @@ export default {
   },
   props: {
     auto: { type: Boolean, default: false },
+    matcher: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -148,13 +149,15 @@ export default {
   },
   methods: {
     onCapture() {
-      this.image = this.$refs.webcam.capture();
-      fetch(this.image)
-        .then((res) => res.blob({ type: "image/jpeg" }))
-        .then((img) => {
-          let file = new File([img], "image.jpg");
-          this.$emit("capture", file);
-        });
+      setTimeout(() => {
+        this.image = this.$refs.webcam.capture();
+        fetch(this.image)
+          .then((res) => res.blob({ type: "image/jpeg" }))
+          .then((img) => {
+            let file = new File([img], "image.jpg");
+            this.$emit("capture", file);
+          });
+      });
     },
     onStarted(stream) {
       this.started = stream.active;
@@ -166,6 +169,7 @@ export default {
         faceapi.loadFaceRecognitionModel(this.$baseUrl + "models"),
         faceapi.loadFaceExpressionModel(this.$baseUrl + "models"),
         faceapi.loadMtcnnModel(this.$baseUrl + "models"),
+        faceapi.loadSsdMobilenetv1Model(this.$baseUrl + "models"),
       ]).then(() => {
         setInterval(() => {
           this.detectFaces();
@@ -218,8 +222,14 @@ export default {
         let fullFaceDescriptions = await faceapi
           .detectAllFaces(video, options)
           .withFaceLandmarks()
-          .withFaceDescriptors()
-          .withFaceExpressions();
+          .withFaceDescriptors();
+
+        if (this.matcher && fullFaceDescriptions.length) {
+          const faceMatcher = new faceapi.FaceMatcher(fullFaceDescriptions);
+          this.$store.getters.getActiveEntries.forEach((user) => {
+            this.findMatch(user, faceMatcher);
+          });
+        }
 
         if (fullFaceDescriptions.length && video) {
           const canvas = this.$refs.canvas;
@@ -236,9 +246,6 @@ export default {
             faceapi.draw.drawDetections(canvas, element);
           });
           this.detecting = false;
-          if (this.auto) {
-            this.onCapture();
-          }
         } else {
           this.detecting = true;
         }
@@ -246,6 +253,18 @@ export default {
           this.$toast.clear();
           this.$toast.error("Error! More than one face detected");
         }
+      }
+    },
+    async findMatch(user, faceMatcher) {
+      const img = await faceapi.fetchImage(this.$apiUrl + user.picture);
+      const singleResult = await faceapi
+        .detectSingleFace(img)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+      if (singleResult) {
+        const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor);
+        console.log(bestMatch.toString());
       }
     },
   },

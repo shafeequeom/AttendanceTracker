@@ -23,6 +23,7 @@
                   user.image = img;
                 }
               "
+              :matcher="true"
               :auto="autoShot"
               ref="camera"
             />
@@ -61,6 +62,7 @@
                     placeholder="Search your email.."
                     :rules="[(v) => !!v || 'Name is required is required']"
                     auto-select-first
+                    @change="onUserSelect"
                     return-object
                     required
                     ref="nameField"
@@ -168,6 +170,12 @@ export default {
         this.height = this.mode == "manual" ? 150 : 250;
         this.$forceUpdate();
       });
+    },
+    onUserSelect() {
+      this.$refs.camera.reCapture();
+      setTimeout(() => {
+        this.$refs.camera.onCapture();
+      }, 1000);
     },
   },
 };
