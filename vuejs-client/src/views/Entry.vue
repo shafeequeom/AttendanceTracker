@@ -103,15 +103,15 @@ export default {
       console.log(this.$toast);
       await registerAttendance(this.form)
         .then((response) => {
-          console.log(this.$toast);
           if (response.status == 200) {
-            console.log(response.data.message);
             this.$toast.success(response.data.message);
             this.form = {
               name: null,
               email: null,
               picture: null,
             };
+            // this.$refs.camera.reCapture();
+            this.$router.push("/");
           }
         })
         .catch((error) => {

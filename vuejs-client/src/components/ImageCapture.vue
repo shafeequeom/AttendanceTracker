@@ -150,8 +150,11 @@ export default {
     onCapture() {
       this.image = this.$refs.webcam.capture();
       fetch(this.image)
-        .then((res) => res.blob())
-        .then((img) => this.$emit("capture", img));
+        .then((res) => res.blob({ type: "image/jpeg" }))
+        .then((img) => {
+          let file = new File([img], "image.jpg");
+          this.$emit("capture", file);
+        });
     },
     onStarted(stream) {
       this.started = stream.active;
@@ -163,9 +166,6 @@ export default {
         faceapi.loadFaceRecognitionModel(this.$baseUrl + "models"),
         faceapi.loadFaceExpressionModel(this.$baseUrl + "models"),
         faceapi.loadMtcnnModel(this.$baseUrl + "models"),
-        // faceapi.nets.faceRecognitionNet.loadFromUri("/models"),
-        // faceapi.nets.faceLandmark68Net.loadFromUri("/models"),
-        // faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
       ]).then(() => {
         setInterval(() => {
           this.detectFaces();
