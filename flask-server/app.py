@@ -71,6 +71,14 @@ def add_attendance():
         if not data:
             result = {"message": 'No entry data found', "data": data}
             return jsonify(result), 400
+    if(type == 'ENTRY'):
+        entry = Attendance.query.filter(
+            Attendance.name.like(name),
+            Attendance.email.like(email), Attendance.type.like(type)).first()
+        data = attendance_schema.dump(entry)
+        if data:
+            result = {"message": 'Entry data already exist', "data": data}
+            return jsonify(result), 400
     extensionLength = len(picture.filename.split('.')) - 1
     fileExtension = picture.filename.split(".")[extensionLength]
     filename = name + '.' + fileExtension
