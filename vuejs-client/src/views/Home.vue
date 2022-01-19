@@ -24,8 +24,15 @@
         Exit
       </v-btn>
 
-      <v-btn x-large width="150" height="70" class="ma-2 ml-4" color="#7375ff">
-        List
+      <v-btn
+        @click="gotoPage('logs')"
+        x-large
+        width="150"
+        height="70"
+        class="ma-2 ml-4"
+        color="#7375ff"
+      >
+        Logs
       </v-btn>
     </div>
   </div>

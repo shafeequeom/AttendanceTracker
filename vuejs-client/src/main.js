@@ -6,6 +6,7 @@ import store from "./store";
 import VueParticles from "vue-particles";
 import { VueSpinners } from "@saeris/vue-spinners";
 import common from "./mixins/common";
+import "./utils/filter";
 
 Vue.use(VueSpinners);
 Vue.use(VueParticles);

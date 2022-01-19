@@ -1,6 +1,10 @@
 <template>
   <v-container fluid>
-    <div style="position: absolute; left: 52%; bottom: 10px">
+    <div
+      class="d-flex align-center"
+      style="position: absolute; left: 52%; bottom: 10px"
+    >
+      <v-btn class="mr-4" @click="$router.push('/')">Back</v-btn>
       <v-switch
         dark
         style="z-index: 1000 !important"
@@ -75,7 +79,7 @@
 
 <script>
 import ImageCapture from "@/components/ImageCapture";
-import registerAttendance from "../functions/attendance";
+import { registerAttendance } from "../functions/attendance";
 export default {
   data: () => {
     return {

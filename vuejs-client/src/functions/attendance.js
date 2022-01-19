@@ -23,4 +23,18 @@ const registerAttendance = (form) => {
   });
 };
 
-export default registerAttendance;
+const getAttendance = () => {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`attendances`)
+      .then((response) => {
+        if (response.status == 200) {
+          resolve(response);
+        }
+        reject(response);
+      })
+      .catch((error) => reject(error));
+  });
+};
+
+export { registerAttendance, getAttendance };

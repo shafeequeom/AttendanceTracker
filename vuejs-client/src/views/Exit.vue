@@ -112,12 +112,15 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <div class="d-flex justify-center mt-4">
+      <v-btn @click="$router.push('/')">Back</v-btn>
+    </div>
   </v-container>
 </template>
 
 <script>
 import ImageCapture from "@/components/ImageCapture";
-import registerAttendance from "../functions/attendance";
+import { registerAttendance } from "../functions/attendance";
 export default {
   data: () => {
     return {

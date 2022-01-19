@@ -4,6 +4,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home";
 import Entry from "../views/Entry";
 import Exit from "../views/Exit";
+import Logs from "../views/Logs";
 import NotFound from "../views/NotFound";
 
 Vue.use(VueRouter);
@@ -44,6 +45,18 @@ const routes = [
         id: null,
       },
       title: "Exit",
+    },
+  },
+  {
+    name: "Logs",
+    path: "/logs",
+    component: Logs,
+    meta: {
+      item: null,
+      module: {
+        id: null,
+      },
+      title: "Logs",
     },
   },
   //404
