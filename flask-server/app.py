@@ -91,7 +91,7 @@ def add_attendance():
 
 
 @ app.route('/attendances/current', methods=['GET'])
-def get_attendances():
+def get_active_attendances():
     currentAttendanceSQL = "select * from attendance as aa where aa.email not in (select a.email from attendance as a where date(a.timestamp) = date() and a.type = 'EXIT') and date(timestamp) = date()"
     result = db.engine.execute(currentAttendanceSQL)
     data = [dict(row) for row in result]
