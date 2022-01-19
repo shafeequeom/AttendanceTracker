@@ -115,7 +115,6 @@ export default {
       camera: null,
       deviceId: null,
       devices: [],
-      capture_image_dialoge: false,
       started: false,
       height: 400,
       canvas: { height: 400, width: 100, margin: -400 },
@@ -167,7 +166,7 @@ export default {
         u8arr[n] = bstr.charCodeAt(n);
       }
 
-      return new File([u8arr], "image", { type: mime });
+      return new File([u8arr], "image.jpg", { type: mime });
     },
     onStarted(stream) {
       this.started = stream.active;
@@ -267,6 +266,7 @@ export default {
       }
     },
     async findMatch(user, faceMatcher) {
+      console.log(this.$apiUrl + user.picture);
       const img = await faceapi.fetchImage(this.$apiUrl + user.picture);
       const singleResult = await faceapi
         .detectSingleFace(img)

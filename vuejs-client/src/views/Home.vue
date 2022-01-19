@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="text-center museum-text mt-10">MUSEUM OF <br />FUTURE</div>
+    <div class="text-center museum-text mt-10">MUSEUM OF <br />THE FUTURE</div>
     <div class="d-flex justify-center">
       <v-btn
         x-large

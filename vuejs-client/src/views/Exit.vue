@@ -1,13 +1,5 @@
 <template>
   <v-container fluid>
-    <div style="position: absolute; left: 52%; bottom: 10px">
-      <v-switch
-        dark
-        style="z-index: 1000 !important"
-        v-model="autoShot"
-        :label="`Auto Capture: ${autoShot ? 'ON' : 'OFF'}`"
-      ></v-switch>
-    </div>
     <div>
       <div class="text-center welcome-text">THANK YOU, VISIT AGAIN</div>
       <div class="text-center museum-text">MUSEUM OF FUTURE</div>
@@ -23,8 +15,8 @@
                   user.image = img;
                 }
               "
-              :matcher="true"
-              :auto="autoShot"
+              :matcher="matchMode"
+              :detectedUserEmail="user.email"
               @bestMatch="userMatchFound"
               ref="camera"
             />
@@ -129,7 +121,7 @@ import registerAttendance from "../functions/attendance";
 export default {
   data: () => {
     return {
-      autoShot: false,
+      matchMode: true,
       user: {},
       mode: "automatic",
       height: 250,
@@ -171,6 +163,7 @@ export default {
     modeChange() {
       setTimeout(() => {
         this.height = this.mode == "manual" ? 150 : 250;
+        this.matchMode = this.mode == "manual" ? false : true;
         this.$forceUpdate();
       });
     },
