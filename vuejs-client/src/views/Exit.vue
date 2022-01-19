@@ -159,6 +159,7 @@ export default {
           this.$router.push("/");
         })
         .catch((error) => {
+          this.hideLoader();
           let message = this.errorParser(error);
           this.showError(message);
         });

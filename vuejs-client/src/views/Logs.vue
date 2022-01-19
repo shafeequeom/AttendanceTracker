@@ -69,6 +69,7 @@ export default {
         .catch((error) => {
           let message = this.errorParser(error);
           this.showError(message);
+          this.hideLoader();
         });
     },
   },
