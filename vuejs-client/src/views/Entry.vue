@@ -84,8 +84,8 @@ export default {
   data: () => {
     return {
       form: {
-        name: "Shafeeque OM",
-        email: "shafeequeom7@gmail.com",
+        name: null,
+        email: null,
         picture: null,
       },
       autoShot: false,
