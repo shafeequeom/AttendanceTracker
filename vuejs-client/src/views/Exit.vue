@@ -25,6 +25,7 @@
               "
               :matcher="true"
               :auto="autoShot"
+              @bestMatch="userMatchFound"
               ref="camera"
             />
           </v-col>
@@ -151,18 +152,20 @@ export default {
     },
     async submitEntryForm() {
       if (!this.user.image) {
-        this.$toast.error("Error! Please capture image");
+        this.showError("Error! Please capture image");
         return;
       }
       this.user.type = "EXIT";
+      this.showLoader("Saving..");
       await registerAttendance(this.user)
         .then((response) => {
-          this.$toast.success(response.message);
+          this.showSuccess(response.message);
+          this.hideLoader();
           this.$router.push("/");
         })
         .catch((error) => {
           let message = this.errorParser(error);
-          this.$toast.error(message);
+          this.showError(message);
         });
     },
     modeChange() {
@@ -176,6 +179,11 @@ export default {
       setTimeout(() => {
         this.$refs.camera.onCapture();
       }, 1000);
+    },
+    userMatchFound(user) {
+      if (this.user.email != user.email) {
+        this.user = user;
+      }
     },
   },
 };

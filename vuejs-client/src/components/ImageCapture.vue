@@ -174,6 +174,7 @@ export default {
       this.loadModels();
     },
     loadModels() {
+      this.showLoader("Loading Models..");
       Promise.all([
         faceapi.loadFaceLandmarkModel(this.$baseUrl + "models"),
         faceapi.loadFaceRecognitionModel(this.$baseUrl + "models"),
@@ -181,6 +182,7 @@ export default {
         faceapi.loadMtcnnModel(this.$baseUrl + "models"),
         faceapi.loadSsdMobilenetv1Model(this.$baseUrl + "models"),
       ]).then(() => {
+        this.hideLoader();
         setInterval(() => {
           if (!this.image) this.detectFaces();
         }, 1000);
@@ -201,7 +203,7 @@ export default {
       setTimeout(this.onStart(), 1000);
     },
     onError(error) {
-      this.$toast.error(error);
+      this.showError(error);
     },
     onCameras(cameras) {
       this.devices = cameras;
@@ -260,8 +262,7 @@ export default {
           this.detecting = true;
         }
         if (fullFaceDescriptions.length > 1) {
-          this.$toast.clear();
-          this.$toast.error("Error! More than one face detected");
+          this.showError("Error! More than one face detected");
         }
       }
     },

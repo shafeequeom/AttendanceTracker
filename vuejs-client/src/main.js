@@ -5,12 +5,10 @@ import router from "./router";
 import store from "./store";
 import VueParticles from "vue-particles";
 import { VueSpinners } from "@saeris/vue-spinners";
-import Toast from "vue-toastification";
 import common from "./mixins/common";
 
 Vue.use(VueSpinners);
 Vue.use(VueParticles);
-Vue.use(Toast);
 
 Vue.mixin(common);
 

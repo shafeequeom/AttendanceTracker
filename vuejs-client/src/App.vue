@@ -30,13 +30,21 @@
         <router-view />
       </v-fade-transition>
     </v-main>
+    <loader-overlay />
+    <notifier />
   </v-app>
 </template>
 
 <script>
 import "vue-toastification/dist/index.css";
+import Notifier from "./components/Notifier";
+import LoaderOverlay from "./components/LoaderOverlay";
 export default {
   name: "App",
+  components: {
+    LoaderOverlay,
+    Notifier,
+  },
 };
 </script>
 <style>

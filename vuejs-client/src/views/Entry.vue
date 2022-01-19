@@ -96,27 +96,28 @@ export default {
     },
     async submitEntryForm() {
       if (!this.form.image) {
-        this.$toast.error("Error! Please capture image");
+        this.showError("Error! Please capture image");
         return;
       }
       this.form.type = "ENTRY";
-      console.log(this.$toast);
+      this.showLoader("Saving..");
       await registerAttendance(this.form)
         .then((response) => {
           if (response.status == 200) {
-            this.$toast.success(response.data.message);
+            this.showSuccess(response.data.message);
             this.form = {
               name: null,
               email: null,
               picture: null,
             };
+            this.hideLoader();
             // this.$refs.camera.reCapture();
             this.$router.push("/");
           }
         })
         .catch((error) => {
           let message = this.errorParser(error);
-          this.$toast.error(message);
+          this.showError(message);
         });
     },
   },
