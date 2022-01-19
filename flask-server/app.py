@@ -4,6 +4,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_cors import CORS, cross_origin
 from sqlalchemy.sql import func
+from datetime import date
 import os
 
 # Init app
@@ -74,7 +75,9 @@ def add_attendance():
     if(type == 'ENTRY'):
         entry = Attendance.query.filter(
             Attendance.name.like(name),
-            Attendance.email.like(email), Attendance.type.like(type)).first()
+            Attendance.email.like(email),
+            Attendance.type.like(type),
+            func.date(Attendance.timestamp) == date.today()).first()
         data = attendance_schema.dump(entry)
         if data:
             result = {"message": 'Entry data already exist', "data": data}
