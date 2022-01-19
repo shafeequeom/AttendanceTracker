@@ -92,10 +92,18 @@ def add_attendance():
 
 @ app.route('/attendances/current', methods=['GET'])
 def get_attendances():
-    currentAttendanceSQL = "select * from attendance where email not in (select email from attendance where date(timestamp) = date() and type = 'EXIT') and date(timestamp) = date()"
+    currentAttendanceSQL = "select * from attendance as aa where aa.email not in (select a.email from attendance as a where date(a.timestamp) = date() and a.type = 'EXIT') and date(timestamp) = date()"
     result = db.engine.execute(currentAttendanceSQL)
     data = [dict(row) for row in result]
     return jsonify({'data': data, 'message': "List of currently active entries for today"})
+
+
+@ app.route('/attendances', methods=['GET'])
+def get_attendances():
+    currentAttendanceSQL = "select * from attendance as aa where date(timestamp) = date()"
+    result = db.engine.execute(currentAttendanceSQL)
+    data = [dict(row) for row in result]
+    return jsonify({'data': data, 'message': "List of all entries for today"})
 
 
 @ app.route('/images/<path:filename>')
