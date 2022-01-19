@@ -107,6 +107,7 @@ export default {
   props: {
     auto: { type: Boolean, default: false },
     matcher: { type: Boolean, default: false },
+    detectedUserEmail: { type: String, default: null },
   },
   data() {
     return {
@@ -151,13 +152,22 @@ export default {
     onCapture() {
       setTimeout(() => {
         this.image = this.$refs.webcam.capture();
-        fetch(this.image)
-          .then((res) => res.blob({ type: "image/jpeg" }))
-          .then((img) => {
-            let file = new File([img], "image.jpg");
-            this.$emit("capture", file);
-          });
+        let file = this.dataURLtoFile(this.image);
+        this.$emit("capture", file);
       });
+    },
+    dataURLtoFile(dataurl) {
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+
+      return new File([u8arr], "image", { type: mime });
     },
     onStarted(stream) {
       this.started = stream.active;
@@ -172,7 +182,7 @@ export default {
         faceapi.loadSsdMobilenetv1Model(this.$baseUrl + "models"),
       ]).then(() => {
         setInterval(() => {
-          this.detectFaces();
+          if (!this.image) this.detectFaces();
         }, 1000);
       });
     },
@@ -264,8 +274,18 @@ export default {
 
       if (singleResult) {
         const bestMatch = faceMatcher.findBestMatch(singleResult.descriptor);
-        console.log(bestMatch.toString());
+        if (
+          bestMatch._label != "unknown" &&
+          this.detectedUserEmail != user.email
+        ) {
+          this.emitDetectedUser(user);
+        }
       }
+    },
+    emitDetectedUser(user) {
+      let image = this.$refs.webcam.capture();
+      user.image = this.dataURLtoFile(image);
+      user = this.$emit("bestMatch", user);
     },
   },
 };
