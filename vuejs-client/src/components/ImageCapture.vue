@@ -252,6 +252,9 @@ export default {
           this.canvas.width = video.width;
           this.canvas.height = video.height;
           this.canvas.margin = -(video.height + 50);
+          if (this.auto) {
+            this.onCapture();
+          }
 
           fullFaceDescriptions.forEach((element) => {
             faceapi.draw.drawDetections(canvas, element);

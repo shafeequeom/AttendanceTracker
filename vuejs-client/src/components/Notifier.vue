@@ -4,9 +4,9 @@
       v-model="show"
       :color="type"
       :timeout="timeout"
-      bottom
+      top
       right
-      style="z-index: 10000000;"
+      style="z-index: 10000000"
     >
       <v-icon v-if="type == 'success'">mdi-thumb-up</v-icon>
       <v-icon v-else-if="type == 'error'">mdi-thumb-down</v-icon>
