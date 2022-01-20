@@ -29,3 +29,5 @@ Note:- Design is inspired from Museum of the Future official website.
 6. python db_init.py
 7. python app.dy
 ```
+# Screenshots
+https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/1.%20Home.png
