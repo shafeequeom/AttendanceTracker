@@ -155,7 +155,7 @@ export default {
       await registerAttendance(this.user)
         .then((response) => {
           if (response.status == 200) {
-            this.showSuccess(response.message);
+            this.showSuccess(response.data.message);
             this.hideLoader();
             this.$refs.camera.reCapture();
             this.user = {};

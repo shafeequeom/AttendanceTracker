@@ -102,8 +102,12 @@ export default {
     },
     async submitEntryForm() {
       if (!this.form.image) {
-        this.showError("Error! Please capture image");
-        return;
+        if (this.autoShot) {
+          this.$refs.camera.onCapture();
+        } else {
+          this.showError("Error! Please capture image");
+          return;
+        }
       }
       if (!this.$refs.form.validate()) {
         this.showError("Please fill name and email fields");
