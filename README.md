@@ -1,5 +1,5 @@
 # AttendanceTracker
-An attendance tracking system using VueJS with Flask with facial detection using Tensorflow (face-api)
+An attendance tracking system using VueJS with Flask with facial detection using Tensorflow (face-api). 
 
 
 Note:- Design is inspired from Museum of the Future official website.
@@ -21,7 +21,7 @@ Note:- Design is inspired from Museum of the Future official website.
 5. npm run serve
 ```
 
-## Frontend
+## Backend
 ```
 3. ..cd
 4. cd /flask-server
