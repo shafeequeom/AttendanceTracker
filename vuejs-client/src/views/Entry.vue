@@ -1,17 +1,5 @@
 <template>
   <v-container fluid>
-    <div
-      class="d-flex align-center"
-      style="position: absolute; left: 52%; bottom: 10px"
-    >
-      <v-btn class="mr-4" @click="$router.push('/')">Back</v-btn>
-      <v-switch
-        dark
-        style="z-index: 1000 !important"
-        v-model="autoShot"
-        :label="`Auto Capture: ${autoShot ? 'ON' : 'OFF'}`"
-      ></v-switch>
-    </div>
     <div>
       <div class="text-center welcome-text">WELCOME TO</div>
       <div class="text-center museum-text">MUSEUM OF FUTURE</div>
@@ -57,7 +45,13 @@
                       label="Enter your email"
                     ></v-text-field>
                   </v-col>
+
                   <v-col>
+                    <v-switch
+                      style="z-index: 1000 !important; margin-top: -30px"
+                      v-model="autoShot"
+                      :label="`Auto Capture: ${autoShot ? 'ON' : 'OFF'}`"
+                    ></v-switch>
                     <v-btn
                       height="40"
                       @click="submitEntryForm"
@@ -74,6 +68,9 @@
         </v-row>
       </v-card-text>
     </v-card>
+    <v-btn class="mt-10" absolute top left @click="$router.push('/')" fab>
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -115,8 +112,8 @@ export default {
               picture: null,
             };
             this.hideLoader();
-            // this.$refs.camera.reCapture();
-            this.$router.push("/");
+            this.$refs.camera.reCapture();
+            // this.$router.push("/");
           }
         })
         .catch((error) => {

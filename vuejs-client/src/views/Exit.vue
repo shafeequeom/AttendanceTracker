@@ -112,9 +112,9 @@
         </v-row>
       </v-card-text>
     </v-card>
-    <div class="d-flex justify-center mt-4">
-      <v-btn @click="$router.push('/')">Back</v-btn>
-    </div>
+    <v-btn class="mt-10" absolute top left @click="$router.push('/')" fab>
+      <v-icon>mdi-home</v-icon>
+    </v-btn>
   </v-container>
 </template>
 
@@ -154,9 +154,13 @@ export default {
       this.showLoader("Saving..");
       await registerAttendance(this.user)
         .then((response) => {
-          this.showSuccess(response.message);
-          this.hideLoader();
-          this.$router.push("/");
+          if (response.status == 200) {
+            this.showSuccess(response.message);
+            this.hideLoader();
+            this.$refs.camera.reCapture();
+            this.user = {};
+          }
+          // this.$router.push("/");
         })
         .catch((error) => {
           this.hideLoader();
