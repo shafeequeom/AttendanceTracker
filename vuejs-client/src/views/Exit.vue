@@ -134,6 +134,7 @@ export default {
     "image-capture": ImageCapture,
   },
   mounted() {
+    // Load active entry list to store
     this.$store.dispatch("loadActiveEntries");
   },
   computed: {
@@ -157,8 +158,10 @@ export default {
           if (response.status == 200) {
             this.showSuccess(response.data.message);
             this.hideLoader();
+            // Reset camera
             this.$refs.camera.reCapture();
             this.user = {};
+            // Update active entry list
             this.$store.dispatch("loadActiveEntries");
           }
           // this.$router.push("/");
@@ -170,6 +173,7 @@ export default {
         });
     },
     modeChange() {
+      // On mode change auto detection and update UI
       setTimeout(() => {
         this.height = this.mode == "manual" ? 150 : 250;
         this.matchMode = this.mode == "manual" ? false : true;
@@ -177,12 +181,14 @@ export default {
       });
     },
     onUserSelect() {
+      // Manual selection changes
       this.$refs.camera.reCapture();
       setTimeout(() => {
         this.$refs.camera.onCapture();
       }, 1000);
     },
     userMatchFound(user) {
+      // On user match found
       if (this.user.email != user.email) {
         this.user = user;
       }

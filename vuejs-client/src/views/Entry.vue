@@ -98,9 +98,10 @@ export default {
   },
   methods: {
     captureImage(img) {
-      this.form.picture = img;
+      this.form.picture = img; //Set form image on capture
     },
     async submitEntryForm() {
+      // Image check
       if (!this.form.image) {
         if (this.autoShot) {
           this.$refs.camera.onCapture();
@@ -109,6 +110,8 @@ export default {
           return;
         }
       }
+
+      //form validation check
       if (!this.$refs.form.validate()) {
         this.showError("Please fill name and email fields");
         return;

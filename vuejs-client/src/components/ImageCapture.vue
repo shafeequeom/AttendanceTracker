@@ -105,9 +105,9 @@ export default {
     "circle-loader": CircleLoader,
   },
   props: {
-    auto: { type: Boolean, default: false },
-    matcher: { type: Boolean, default: false },
-    detectedUserEmail: { type: String, default: null },
+    auto: { type: Boolean, default: false }, // Auto capture image prop
+    matcher: { type: Boolean, default: false }, // Exit matcher prop
+    detectedUserEmail: { type: String, default: null }, // detected user email prop
   },
   data() {
     return {
@@ -148,6 +148,7 @@ export default {
     },
   },
   methods: {
+    // Image capture fuction
     onCapture() {
       setTimeout(() => {
         this.image = this.$refs.webcam.capture();
@@ -155,6 +156,7 @@ export default {
         this.$emit("capture", file);
       });
     },
+    // Converts dataURL image to file
     dataURLtoFile(dataurl) {
       var arr = dataurl.split(","),
         mime = arr[0].match(/:(.*?);/)[1],
@@ -169,10 +171,12 @@ export default {
       return new File([u8arr], "image.jpg", { type: mime });
     },
     onStarted(stream) {
+      // Function detects video started
       this.started = stream.active;
       this.loadModels();
     },
     loadModels() {
+      // Loading face detection models for face recognition
       this.showLoader("Loading Models..");
       Promise.all([
         faceapi.loadFaceLandmarkModel(this.$baseUrl + "models"),
@@ -191,12 +195,15 @@ export default {
       this.started = stream.active;
     },
     onStop() {
+      // Camera stop function
       this.$refs.webcam.stop();
     },
     onStart() {
+      // Camera Start function
       this.$refs.webcam.start();
     },
     reCapture() {
+      // Re-capture function
       this.image = null;
       this.$forceUpdate();
       setTimeout(this.onStart(), 1000);
@@ -212,6 +219,7 @@ export default {
       this.camera = deviceId;
     },
     async detectFaces() {
+      // Function for detecting faces from the video
       const mtcnnParams = {
         // number of scaled versions of the input image passed through the CNN
         // of the first stage, lower numbers will result in lower inference time,
@@ -236,6 +244,7 @@ export default {
           .withFaceDescriptors();
 
         if (this.matcher && fullFaceDescriptions.length) {
+          // This code check for matching face from entry
           const faceMatcher = new faceapi.FaceMatcher(fullFaceDescriptions);
           this.$store.getters.getActiveEntries.forEach((user) => {
             this.findMatch(user, faceMatcher);
@@ -243,6 +252,7 @@ export default {
         }
 
         if (fullFaceDescriptions.length && video) {
+          // This code draws the boxes around matched face
           const canvas = this.$refs.canvas;
           const dims = faceapi.matchDimensions(canvas, video, true);
           fullFaceDescriptions = await faceapi.resizeResults(
@@ -269,6 +279,7 @@ export default {
       }
     },
     async findMatch(user, faceMatcher) {
+      // Checks face detected from camera with user image from active entries
       const img = await faceapi.fetchImage(this.$apiUrl + user.picture);
       const singleResult = await faceapi
         .detectSingleFace(img)
@@ -286,6 +297,7 @@ export default {
       }
     },
     emitDetectedUser(user) {
+      //Pass the detected user to parent component
       let image = this.$refs.webcam.capture();
       user.image = this.dataURLtoFile(image);
       user = this.$emit("bestMatch", user);

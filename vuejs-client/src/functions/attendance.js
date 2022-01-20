@@ -1,5 +1,6 @@
 import axios from "../utils/axios";
 
+//API call Function for Entry and Exit
 const registerAttendance = (form) => {
   return new Promise((resolve, reject) => {
     let formData = new FormData();
@@ -23,6 +24,7 @@ const registerAttendance = (form) => {
   });
 };
 
+//API call Function getting today's logs
 const getAttendance = () => {
   return new Promise((resolve, reject) => {
     axios

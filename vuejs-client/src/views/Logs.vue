@@ -57,6 +57,7 @@ export default {
     this.getTodaysAttendance();
   },
   methods: {
+    // Get attendance
     async getTodaysAttendance() {
       this.showLoader("Saving..");
       await getAttendance()
