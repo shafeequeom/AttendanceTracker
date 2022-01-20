@@ -269,7 +269,6 @@ export default {
       }
     },
     async findMatch(user, faceMatcher) {
-      console.log(this.$apiUrl + user.picture);
       const img = await faceapi.fetchImage(this.$apiUrl + user.picture);
       const singleResult = await faceapi
         .detectSingleFace(img)

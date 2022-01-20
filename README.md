@@ -2,7 +2,10 @@
 An attendance tracking system using VueJS with Flask with facial detection using Tensorflow (face-api). 
 
 
-Note:- Design is inspired from Museum of the Future official website.
+Note:- 
+1. Design is inspired from Museum of the Future official website. 
+2. Please wait until system detects your face on entry so that you have better detection chances on exit.
+3. User google chrome for better performance
 
 ## Live Demo Link Down
 
