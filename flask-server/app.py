@@ -84,7 +84,7 @@ def add_attendance():
             return jsonify(result), 400
     extensionLength = len(picture.filename.split('.')) - 1
     fileExtension = picture.filename.split(".")[extensionLength]
-    filename = name + '.' + fileExtension
+    filename = email + '.' + fileExtension
     picture.save(os.path.join(basedir, 'static/'+filename))
 
     attendancePitcure = 'images/'+filename
