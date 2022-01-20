@@ -28,21 +28,26 @@
               ></v-img>
             </div>
             <div class="pa-4">
-              <v-form>
+              <v-form ref="form">
                 <v-row>
                   <v-col md="12" sm="12" lg="12">
                     <v-text-field
                       outlined
                       v-model="form.name"
                       round
-                      label="Enter your name"
+                      label="Enter your name*"
+                      :rules="[(v) => !!v || 'Name is required']"
                     ></v-text-field>
                   </v-col>
                   <v-col md="12" sm="12" lg="12">
                     <v-text-field
                       v-model="form.email"
                       outlined
-                      label="Enter your email"
+                      label="Enter your email*"
+                      :rules="[
+                        (v) => !!v || 'E-mail is required',
+                        (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                      ]"
                     ></v-text-field>
                   </v-col>
 
@@ -100,6 +105,10 @@ export default {
         this.showError("Error! Please capture image");
         return;
       }
+      if (!this.$refs.form.validate()) {
+        this.showError("Please fill name and email fields");
+        return;
+      }
       this.form.type = "ENTRY";
       this.showLoader("Saving..");
       await registerAttendance(this.form)
@@ -114,6 +123,7 @@ export default {
             this.hideLoader();
             this.$refs.camera.reCapture();
             this.$store.dispatch("loadActiveEntries");
+            this.$refs.form.resetValidation();
             // this.$router.push("/");
           }
         })
