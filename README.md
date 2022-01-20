@@ -9,7 +9,7 @@ Note:-
 
 ## Live Demo Link Down
 
-### Goto Live Demo [Clik Here](https://attendencetracker-e66c1.web.app/).
+### Goto Live Demo [Click Here](https://attendencetracker-e66c1.web.app/).
 
 
 # How to run locally
