@@ -1,5 +1,5 @@
 # AttendanceTracker
-An attendance tracking system using VueJS with Flask with facial detection using Tensorflow (face-api). 
+An attendance tracking system using VueJS with Flask with facial detection using Tensorflow JS (face-api). 
 
 
 Note:- 
