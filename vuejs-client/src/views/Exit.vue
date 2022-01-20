@@ -159,6 +159,7 @@ export default {
             this.hideLoader();
             this.$refs.camera.reCapture();
             this.user = {};
+            this.$store.dispatch("loadActiveEntries");
           }
           // this.$router.push("/");
         })

@@ -113,6 +113,7 @@ export default {
             };
             this.hideLoader();
             this.$refs.camera.reCapture();
+            this.$store.dispatch("loadActiveEntries");
             // this.$router.push("/");
           }
         })
