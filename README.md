@@ -31,4 +31,7 @@ Note:- Design is inspired from Museum of the Future official website.
 ```
 # Screenshots
 ![alt text](https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/1.%20Home.png)
+![alt text](https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/2.%20Entry.png)
+![alt text](https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/3.%20Exit.png)
+![alt text](https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/4.%20Logs.png)
 
