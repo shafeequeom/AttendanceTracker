@@ -17,21 +17,23 @@ Note:-
 1. git clone https://github.com/shafeequeom/VueDashboad.git
 2. cd AttendanceTracker
 ```
-## Frontend
+## Frontend commands to run
 ```
 3. cd /vuejs-client
 4. npm i
 5. npm run serve
 ```
 
-## Backend
+## Backend Commands to run
 ```
 3. ..cd
 4. cd /flask-server
-5. pip install pipenv
-6. pipenv install
-7. python db_init.py
-8. python app.dy
+5. mkdir static
+6. pip install pipenv
+7. pipenv shell
+8. pipenv install
+9. python db_init.py
+10. python app.dy
 ```
 # Screenshots
 ![alt text](https://github.com/shafeequeom/AttendanceTracker/blob/main/screenshots/1.%20Home.png)
